@@ -24,6 +24,9 @@ namespace Umbraco.Cms.Core.Install.Models
         [DataMember(Name = "password")]
         public string Password { get; set; } = null!;
 
+        [DataMember(Name = "port")]
+        public string Port { get; set; } = null!;
+
         [DataMember(Name = "integratedAuth")]
         public bool IntegratedAuth { get; set; }
 
