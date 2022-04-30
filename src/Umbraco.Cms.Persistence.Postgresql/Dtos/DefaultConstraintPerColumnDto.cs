@@ -4,7 +4,8 @@ namespace Umbraco.Cms.Persistence.Postgresql.Dtos
 {
     internal class DefaultConstraintPerColumnDto
     {
-        [Column("TABLE_NAME")] public string TableName { get; set; } = null!;
+        [Column("TABLE_NAME")]
+        public string TableName { get; set; } = null!;
 
         [Column("COLUMN_NAME")]
         public string ColumnName { get; set; } = null!;

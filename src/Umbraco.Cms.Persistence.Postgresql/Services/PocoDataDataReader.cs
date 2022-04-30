@@ -16,10 +16,9 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
     /// store every content item and it's XML structure in memory to get it into the DB, we can stream it into the db with this
     /// reader.
     /// </remarks>
-    internal class PocoDataDataReader<T, TSyntax> : BulkDataReader
-        where TSyntax : ISqlSyntaxProvider
+    internal class PocoDataDataReader<T> : BulkDataReader
     {
-        private readonly MicrosoftSqlSyntaxProviderBase<TSyntax> _sqlSyntaxProvider;
+        private readonly SyntaxProvider _sqlSyntaxProvider;
         private readonly TableDefinition _tableDefinition;
         private readonly PocoColumn[] _readerColumns;
         private readonly IEnumerator<T> _enumerator;
@@ -29,7 +28,7 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
         public PocoDataDataReader(
             IEnumerable<T> dataSource,
             PocoData pd,
-            MicrosoftSqlSyntaxProviderBase<TSyntax> sqlSyntaxProvider)
+            SyntaxProvider sqlSyntaxProvider)
         {
             if (dataSource == null) throw new ArgumentNullException(nameof(dataSource));
             if (sqlSyntaxProvider == null) throw new ArgumentNullException(nameof(sqlSyntaxProvider));
@@ -38,7 +37,7 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
             if (_tableDefinition == null) throw new InvalidOperationException("No table definition found for type " + pd.Type);
 
             // only real columns, exclude result/computed columns
-            // Like NPoco does: https://github.com/schotime/NPoco/blob/5117a55fde57547e928246c044fd40bd00b2d7d1/src/NPoco.PostgreSQL/SqlBulkCopyHelper.cs#L59
+            // Like NPoco does: https://github.com/schotime/NPoco/blob/5117a55fde57547e928246c044fd40bd00b2d7d1/src/NPoco.Postgresql/SqlBulkCopyHelper.cs#L59
             _readerColumns = pd.Columns
                 .Where(x => x.Value.ResultColumn == false && x.Value.ComputedColumn == false)
                 .Select(x => x.Value)

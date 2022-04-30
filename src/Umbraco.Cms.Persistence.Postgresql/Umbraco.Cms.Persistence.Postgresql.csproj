@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <PackageId>Umbraco.Cms.Persistence.PostgreSQL</PackageId>
-    <Title>Umbraco.Cms.Persistence.PostgreSQL</Title>
-    <Description>Adds support for PostgreSQL to Umbraco CMS.</Description>
+    <PackageId>Umbraco.Cms.Persistence.Postgresql</PackageId>
+    <Title>Umbraco.Cms.Persistence.Postgresql</Title>
+    <Description>Adds support for Postgresql to Umbraco CMS.</Description>
   </PropertyGroup>
 
   <ItemGroup>

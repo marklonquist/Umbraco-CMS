@@ -15,18 +15,18 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services;
 /// <summary>
 /// SQL Server implementation of <see cref="IDistributedLockingMechanism"/>.
 /// </summary>
-public class PostgreSQLDistributedLockingMechanism : IDistributedLockingMechanism
+public class DistributedLockingMechanism : IDistributedLockingMechanism
 {
-    private readonly ILogger<PostgreSQLDistributedLockingMechanism> _logger;
+    private readonly ILogger<DistributedLockingMechanism> _logger;
     private readonly Lazy<IScopeAccessor> _scopeAccessor; // Hooray it's a circular dependency.
     private readonly IOptionsMonitor<GlobalSettings> _globalSettings;
     private readonly IOptionsMonitor<ConnectionStrings> _connectionStrings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PostgreSQLDistributedLockingMechanism"/> class.
+    /// Initializes a new instance of the <see cref="DistributedLockingMechanism"/> class.
     /// </summary>
-    public PostgreSQLDistributedLockingMechanism(
-        ILogger<PostgreSQLDistributedLockingMechanism> logger,
+    public DistributedLockingMechanism(
+        ILogger<DistributedLockingMechanism> logger,
         Lazy<IScopeAccessor> scopeAccessor,
         IOptionsMonitor<GlobalSettings> globalSettings,
         IOptionsMonitor<ConnectionStrings> connectionStrings)
@@ -45,23 +45,23 @@ public class PostgreSQLDistributedLockingMechanism : IDistributedLockingMechanis
     public IDistributedLock ReadLock(int lockId, TimeSpan? obtainLockTimeout = null)
     {
         obtainLockTimeout ??= _globalSettings.CurrentValue.DistributedLockingReadLockDefaultTimeout;
-        return new PostgreSQLDistributedLock(this, lockId, DistributedLockType.ReadLock, obtainLockTimeout.Value);
+        return new PostgresqlDistributedLock(this, lockId, DistributedLockType.ReadLock, obtainLockTimeout.Value);
     }
 
     /// <inheritdoc />
     public IDistributedLock WriteLock(int lockId, TimeSpan? obtainLockTimeout = null)
     {
         obtainLockTimeout ??= _globalSettings.CurrentValue.DistributedLockingWriteLockDefaultTimeout;
-        return new PostgreSQLDistributedLock(this, lockId, DistributedLockType.WriteLock, obtainLockTimeout.Value);
+        return new PostgresqlDistributedLock(this, lockId, DistributedLockType.WriteLock, obtainLockTimeout.Value);
     }
 
-    private class PostgreSQLDistributedLock : IDistributedLock
+    private class PostgresqlDistributedLock : IDistributedLock
     {
-        private readonly PostgreSQLDistributedLockingMechanism _parent;
+        private readonly DistributedLockingMechanism _parent;
         private readonly TimeSpan _timeout;
 
-        public PostgreSQLDistributedLock(
-            PostgreSQLDistributedLockingMechanism parent,
+        public PostgresqlDistributedLock(
+            DistributedLockingMechanism parent,
             int lockId,
             DistributedLockType lockType,
             TimeSpan timeout)
@@ -111,7 +111,7 @@ public class PostgreSQLDistributedLockingMechanism : IDistributedLockingMechanis
         }
 
         public override string ToString()
-            => $"PostgreSQLDistributedLock({LockId}, {LockType}";
+            => $"PostgresqlDistributedLock({LockId}, {LockType}";
 
         private void ObtainReadLock()
         {
@@ -124,7 +124,7 @@ public class PostgreSQLDistributedLockingMechanism : IDistributedLockingMechanis
 
             if (!db.InTransaction)
             {
-                throw new InvalidOperationException("PostgreSQLDistributedLockingMechanism requires a transaction to function.");
+                throw new InvalidOperationException("PostgresqlDistributedLockingMechanism requires a transaction to function.");
             }
 
             if (db.Transaction.IsolationLevel < IsolationLevel.ReadCommitted)
@@ -156,7 +156,7 @@ public class PostgreSQLDistributedLockingMechanism : IDistributedLockingMechanis
 
             if (!db.InTransaction)
             {
-                throw new InvalidOperationException("PostgreSQLDistributedLockingMechanism requires a transaction to function.");
+                throw new InvalidOperationException("PostgresqlDistributedLockingMechanism requires a transaction to function.");
             }
 
             if (db.Transaction.IsolationLevel < IsolationLevel.ReadCommitted)

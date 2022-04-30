@@ -5,10 +5,10 @@ using Umbraco.Cms.Infrastructure.Persistence;
 namespace Umbraco.Cms.Persistence.Postgresql.Services;
 
 /// <summary>
-/// Provider metadata for PostgreSQL
+/// Provider metadata for Postgresql
 /// </summary>
 [DataContract]
-public class PostgreSQLDatabaseProviderMetadata : IDatabaseProviderMetadata
+public class DatabaseProviderMetadata : IDatabaseProviderMetadata
 {
     /// <inheritdoc />
     public Guid Id => new ("771ebf93-c469-4e71-82a9-170485bcc007");
@@ -17,7 +17,7 @@ public class PostgreSQLDatabaseProviderMetadata : IDatabaseProviderMetadata
     public int SortOrder => 2;
 
     /// <inheritdoc />
-    public string DisplayName => "PostgreSQL";
+    public string DisplayName => "Postgresql";
 
     /// <inheritdoc />
     public string DefaultDatabaseName => string.Empty;

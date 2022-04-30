@@ -1,12 +1,12 @@
 namespace Umbraco.Cms.Persistence.Postgresql;
 
 /// <summary>
-/// Constants related to PostgreSQL.
+/// Constants related to Postgresql.
 /// </summary>
 public static class Constants
 {
     /// <summary>
-    /// PostgreSQL provider name.
+    /// Postgresql provider name.
     /// </summary>
-    public const string ProviderName = "PostgreSQL";
+    public const string ProviderName = "Postgresql";
 }

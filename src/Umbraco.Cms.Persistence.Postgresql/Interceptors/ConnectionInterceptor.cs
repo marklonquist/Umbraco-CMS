@@ -4,7 +4,7 @@ using Umbraco.Cms.Infrastructure.Persistence;
 
 namespace Umbraco.Cms.Persistence.Postgresql.Interceptors;
 
-public abstract class PostgreSQLConnectionInterceptor : IProviderSpecificConnectionInterceptor
+public abstract class ConnectionInterceptor : IProviderSpecificConnectionInterceptor
 {
     public string ProviderName => Constants.ProviderName;
 

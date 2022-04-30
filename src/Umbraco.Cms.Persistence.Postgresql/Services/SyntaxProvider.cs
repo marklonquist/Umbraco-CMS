@@ -20,17 +20,17 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
     /// <summary>
     /// Represents an SqlSyntaxProvider for Sql Server.
     /// </summary>
-    public class PostgreSQLSyntaxProvider : SqlSyntaxProviderBase<PostgreSQLSyntaxProvider>
+    public class SyntaxProvider : SqlSyntaxProviderBase<SyntaxProvider>
     {
         private readonly IOptions<GlobalSettings> _globalSettings;
-        private readonly ILogger<PostgreSQLSyntaxProvider> _log;
+        private readonly ILogger<SyntaxProvider> _log;
 
-        public PostgreSQLSyntaxProvider(IOptions<GlobalSettings> globalSettings)
-            : this(globalSettings, StaticApplicationLogging.CreateLogger<PostgreSQLSyntaxProvider>())
+        public SyntaxProvider(IOptions<GlobalSettings> globalSettings)
+            : this(globalSettings, StaticApplicationLogging.CreateLogger<SyntaxProvider>())
         {
         }
 
-        public PostgreSQLSyntaxProvider(IOptions<GlobalSettings> globalSettings, ILogger<PostgreSQLSyntaxProvider> log)
+        public SyntaxProvider(IOptions<GlobalSettings> globalSettings, ILogger<SyntaxProvider> log)
         {
             _globalSettings = globalSettings;
             _log = log;
@@ -56,13 +56,13 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
             var setting = _globalSettings.Value.DatabaseFactoryServerVersion;
             var fromSettings = false;
 
-            if (setting.IsNullOrWhiteSpace() || !setting.StartsWith("PostgreSQL.")
-                                             || !Enum<PostgreSQLSyntaxProvider.VersionName>.TryParse(setting.Substring("PostgreSQL.".Length), out var versionName, true))
+            if (setting.IsNullOrWhiteSpace() || !setting.StartsWith("Postgresql.")
+                                             || !Enum<SyntaxProvider.VersionName>.TryParse(setting.Substring("Postgresql.".Length), out var versionName, true))
             {
                 versionName = GetSetVersion(connectionString, ProviderName, _log).ProductVersionName;
             }
 
-            _log.LogDebug("PostgreSQL {PostgreSQLVersion}, DatabaseType is {DatabaseType} ({Source}).", versionName, DatabaseType.PostgreSQL, fromSettings ? "settings" : "detected");
+            _log.LogDebug("Postgresql {PostgresqlVersion}, DatabaseType is {DatabaseType} ({Source}).", versionName, DatabaseType.PostgreSQL, fromSettings ? "settings" : "detected");
 
             return DatabaseType.PostgreSQL;
         }
@@ -161,7 +161,7 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Failed to detected PostgreSQL version.");
+                    logger.LogError(e, "Failed to detected Postgresql version.");
                     version = new ServerVersionInfo(); // all unknown
                 }
             }
@@ -180,7 +180,7 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
             return items.Select(x => new Tuple<string, string, string, string>(x.TableName, x.ColumnName, x.Name, x.Definition));
         }
 
-        public override string DbProvider => "PostgreSQL";
+        public override string DbProvider => "Postgresql";
 
         public override IEnumerable<string> GetTablesInSchema(IDatabase db)
         {

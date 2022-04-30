@@ -4,7 +4,7 @@ using Umbraco.Cms.Core.DependencyInjection;
 namespace Umbraco.Cms.Persistence.Postgresql;
 
 /// <summary>
-/// Automatically adds PostgreSQL support to Umbraco when this project is referenced.
+/// Automatically adds Postgresql support to Umbraco when this project is referenced.
 /// </summary>
 public class PostgresqlComposer : IComposer
 {

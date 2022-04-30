@@ -9,7 +9,7 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
     /// <summary>
     /// A bulk sql insert provider for Sql Server
     /// </summary>
-    public class PostgreSQLBulkSqlInsertProvider : IBulkSqlInsertProvider
+    public class BulkSqlInsertProvider : IBulkSqlInsertProvider
     {
         public string ProviderName => Constants.ProviderName;
 
@@ -21,18 +21,18 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
             var pocoData = database.PocoDataFactory.ForType(typeof(T));
             if (pocoData == null) throw new InvalidOperationException("Could not find PocoData for " + typeof(T));
 
-            return BulkInsertRecordsPostgreSQL(database, pocoData, recordsA);
+            return BulkInsertRecordsPostgresql(database, pocoData, recordsA);
         }
 
         /// <summary>
-        /// Bulk-insert records using PostgreSQL BulkCopy method.
+        /// Bulk-insert records using Postgresql BulkCopy method.
         /// </summary>
         /// <typeparam name="T">The type of the records.</typeparam>
         /// <param name="database">The database.</param>
         /// <param name="pocoData">The PocoData object corresponding to the record's type.</param>
         /// <param name="records">The records.</param>
         /// <returns>The number of records that were inserted.</returns>
-        private int BulkInsertRecordsPostgreSQL<T>(IUmbracoDatabase database, PocoData pocoData, IEnumerable<T> records)
+        private int BulkInsertRecordsPostgresql<T>(IUmbracoDatabase database, PocoData pocoData, IEnumerable<T> records)
         {
             // TODO: The main reason this exists is because the NPoco InsertBulk method doesn't return the number of items.
             // It is worth investigating the performance of this vs NPoco's because we use a custom BulkDataReader
@@ -46,17 +46,17 @@ namespace Umbraco.Cms.Persistence.Postgresql.Services
                 var tTransaction = NPocoDatabaseExtensions.GetTypedTransaction<SqlTransaction>(command.Transaction);
                 var tableName = pocoData.TableInfo.TableName;
 
-                var syntax = database.SqlContext.SqlSyntax as PostgreSQLSyntaxProvider;
-                if (syntax == null) throw new NotSupportedException("SqlSyntax must be PostgreSQLSyntaxProvider.");
+                var syntax = database.SqlContext.SqlSyntax as SyntaxProvider;
+                if (syntax == null) throw new NotSupportedException("SqlSyntax must be PostgresqlSyntaxProvider.");
 
                 using (var copy = new SqlBulkCopy(tConnection, SqlBulkCopyOptions.Default, tTransaction)
                 {
                     BulkCopyTimeout = 0, // 0 = no bulk copy timeout. If a timeout occurs it will be an connection/command timeout.
                     DestinationTableName = tableName,
-                    // be consistent with NPoco: https://github.com/schotime/NPoco/blob/5117a55fde57547e928246c044fd40bd00b2d7d1/src/NPoco.PostgreSQL/SqlBulkCopyHelper.cs#L50
+                    // be consistent with NPoco: https://github.com/schotime/NPoco/blob/5117a55fde57547e928246c044fd40bd00b2d7d1/src/NPoco.Postgresql/SqlBulkCopyHelper.cs#L50
                     BatchSize = 4096
                 })
-                using (var bulkReader = new PocoDataDataReader<T, PostgreSQLSyntaxProvider>(records, pocoData, syntax))
+                using (var bulkReader = new PocoDataDataReader<T, SyntaxProvider>(records, pocoData, syntax))
                 {
                     //we need to add column mappings here because otherwise columns will be matched by their order and if the order of them are different in the DB compared
                     //to the order in which they are declared in the model then this will not work, so instead we will add column mappings by name so that this explicitly uses

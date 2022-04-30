@@ -3,7 +3,7 @@ using Umbraco.Cms.Infrastructure.Persistence;
 
 namespace Umbraco.Cms.Persistence.Postgresql.Services
 {
-    public class PostgreSQLDatabaseCreator : IDatabaseCreator
+    public class DatabaseCreator : IDatabaseCreator
     {
         public string ProviderName => Constants.ProviderName;
 
